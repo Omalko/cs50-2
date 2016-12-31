@@ -26,13 +26,11 @@ int GetCorrectFloat(void)
 
 	int totalCoins = 0;
 	
-	int cents = change * 100;
+	int cents = (int)(change * 1000)/(10);
 	// how many quarters?
 	int numQuarters = cents / 25;
-	printf("I calculate that you need %d quarters.\n", numQuarters);
 	totalCoins += numQuarters;
 	int remainingAfterQuarters = cents - (numQuarters*25);
-	printf("There are %d cents remaining after quarters.\n", remainingAfterQuarters);
 	//how many dimes?
 	int numDimes = remainingAfterQuarters / 10;
 	totalCoins += numDimes;
