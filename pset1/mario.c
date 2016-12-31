@@ -7,7 +7,18 @@ int main(void)
 {
 
 	int height = GetCorrectInt();
-	printf("okay, height is %d", height);
+	int numHashes = 2;
+	for (int i=0; i<height; i++) {
+		for (int j=i; j<height-1; j++) {
+			printf("%s", " ");
+		}
+		for (int k=0; k<numHashes; k++) {
+			printf("%s", "#");
+		}
+		numHashes ++;
+		
+		printf("\n");
+	}
 
 }
 
