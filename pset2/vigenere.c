@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <cs50.h>
 #include <string.h>
+#include <ctype.h>
 
 int main(int argc, string argv[1])
 {
@@ -34,6 +35,13 @@ int main(int argc, string argv[1])
             printf("ptext_ascii is: %d\n", ptext_ascii);
             printf("pword_ascii is: %d\n", pword_ascii);
             printf("reg letter is: %c\n", ptext[curr_pos]);
+            
+            int ptext_lower = tolower(ptext_ascii);
+            int pword_lower = tolower(pword_ascii);
+            
+            int shift = (int) pword_lower - (int) ptext_lower;
+            
+            printf("Shift is %d\n", shift);
             
         }
         else
