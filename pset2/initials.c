@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <cs50.h>
+#include <ctype.h>
 #include <string.h>
 
 int main(void)
 {
-	string name = GetString();
-	for (int i=0; i<strlen(name); i++)
+	string name = get_string();
+	printf("%c", toupper(name[0]));
+	for (int i=1; i<strlen(name); i++)
 	{
-		int char_as_int = (int) name[i];
-		if (char_as_int >= 65 && char_as_int <= 90)
+		if (isspace(name[i]))
 		{
-			printf("%c", name[i]);
+			printf("%c", toupper(name[i+1]));
 		}
 	}
 	printf("\n");
