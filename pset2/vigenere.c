@@ -93,6 +93,6 @@ int main(int argc, string argv[1])
         }
         curr_pos ++;
     }
-    //printf("\n");
+    //gprintf("\n");
     return 0;
 }
