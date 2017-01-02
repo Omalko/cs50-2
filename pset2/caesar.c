@@ -49,6 +49,6 @@ int main(int argc, string argv[1])
             printf("%c", ascii);
         }
     }
-    printf("\n");
+    //printf("\n");
     return 0;
 }
