@@ -3,9 +3,29 @@
 #include <string.h>
 #include <ctype.h>
 
+/**
+ * Modified a function from 
+ * http://stackoverflow.com/questions/29248585/c-checking-command-line-argument-is-integer-or-not
+ * 
+ **/
+bool isNumber(string number)
+{
+    for (int i=0; i<strlen(number); i++)
+    {
+        if (isdigit(number[i]))
+            return true;
+    }
+    return false;
+}
+
 int main(int argc, string argv[1])
 {
     if (argc != 2)
+    {
+        printf("Usage: ./vigenere str\n");
+        return 1;
+    }
+    if (isNumber(argv[1]))
     {
         printf("Usage: ./vigenere str\n");
         return 1;
