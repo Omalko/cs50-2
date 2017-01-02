@@ -39,9 +39,33 @@ int main(int argc, string argv[1])
             int ptext_lower = tolower(ptext_ascii);
             int pword_lower = tolower(pword_ascii);
             
+            int pword_reg_index = pword_lower - 97;
+            
             int shift = (int) pword_lower - (int) ptext_lower;
             
+            printf("PWord_reg_index is: %d\n", pword_reg_index);
             printf("Shift is %d\n", shift);
+            
+            if (ptext_ascii > 64 && ptext_ascii < 91)
+            {
+                int result = ptext_ascii + pword_reg_index;
+                if (result <= 90)
+                {
+                    printf("###########\n");
+                    printf("%c", result);
+                    printf("###########\n");
+                }
+            }
+            else if (ptext_ascii > 96 && ptext_ascii < 123)
+            {
+                int result = ptext_ascii + pword_reg_index;
+                if (result <= 122)
+                {
+                    printf("###########\n");
+                    printf("%c", result);
+                    printf("###########\n");
+                }
+            }
             
         }
         else
