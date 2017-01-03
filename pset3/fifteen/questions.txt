@@ -1,4 +1,4 @@
-0. TODO
-1. TODO
-2. TODO
-3. TODO
+0. The framework allows boards as small as 3 square or as big as 9 square. 
+1. A two dimensional array.
+2. greet()
+3. init(), move(), draw(), won() 
