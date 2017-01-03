@@ -179,7 +179,20 @@ void init(void)
  */
 void draw(void)
 {
-    // TODO
+    for (int r=0; r<d; r++)
+    {
+        for (int c=0; c<d; c++)
+        {
+            if (board[r][c] == 0)
+            {
+                printf("%3s", "_");
+            } else 
+            {
+                printf("%3d", board[r][c]);
+            }
+        }
+        printf("\n\n");
+    }
 }
 
 /**
