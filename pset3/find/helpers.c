@@ -28,6 +28,14 @@ bool search(int value, int values[], int n)
     
     while (max - 1 > min)
     {
+        if (values[max] == value)
+        {
+            return true;
+        }
+        if (values[min] == value)
+        {
+            return true;
+        }
         int guess = (max + min) / 2;
         printf("Guess index is now: %d\n", guess);
         if (values[guess] == value)
