@@ -195,14 +195,75 @@ void draw(void)
     }
 }
 
+void swap_tiles(int empty_row, int empty_col, int tile_row, int tile_col, int tile)
+{
+    board[empty_row][empty_col] = tile;
+    board[tile_row][tile_col] = 0;
+}
+
+
 /**
  * If tile borders empty space, moves tile and returns true, else
  * returns false. 
  */
 bool move(int tile)
 {
-    // TODO
-    return false;
+    bool did_move = false;
+    
+    int empty_row, empty_col, tile_row, tile_col;
+    for (int r=0; r<d; r++)
+    {
+        for (int c=0; c<d; c++)
+        {
+            if (board[r][c] == tile)
+            {
+                tile_row = r;
+                tile_col = c;
+            } else if (board[r][c] == 0)
+            {
+                empty_row = r;
+                empty_col = c;
+            }
+        }
+    }
+    //printf("tile_row: %d, tile_col: %d, empty_row: %d, empty col: %d\n", tile_row, tile_col, empty_row, empty_col);
+    if (tile_row != 0) // able to check above for the empty spot
+    {
+     if (board[tile_row-1][tile_col] == 0)
+     {
+         swap_tiles(empty_row, empty_col, tile_row, tile_col, tile);
+         did_move = true;
+         return did_move;
+     }
+    }
+    if (tile_row != d - 1) // able to check below for the empty spot
+    {
+        if (board[tile_row+1][tile_col] == 0)
+        {
+            swap_tiles(empty_row, empty_col, tile_row, tile_col, tile);
+            did_move = true;
+            return did_move;
+        }
+    }
+    if (tile_col != 0) // able to check left
+    {
+        if (board[tile_row][tile_col - 1] == 0)
+        {
+            swap_tiles(empty_row, empty_col, tile_row, tile_col, tile);
+            did_move = true;
+            return did_move;   
+        }
+    }
+    if (tile_col != d-1) // able to check right
+    {
+        if (board[tile_row][tile_col + 1] == 0)
+        {
+            swap_tiles(empty_row, empty_col, tile_row, tile_col, tile);
+            did_move = true;
+            return did_move;              
+        }
+    }
+    return did_move;
 }
 
 /**
