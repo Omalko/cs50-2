@@ -226,7 +226,6 @@ bool move(int tile)
             }
         }
     }
-    //printf("tile_row: %d, tile_col: %d, empty_row: %d, empty col: %d\n", tile_row, tile_col, empty_row, empty_col);
     if (tile_row != 0) // able to check above for the empty spot
     {
      if (board[tile_row-1][tile_col] == 0)
@@ -272,6 +271,24 @@ bool move(int tile)
  */
 bool won(void)
 {
-    // TODO
-    return false;
+    bool blank_at_end = false;
+    bool pieces_positioned = true;
+    int counter = 1;
+    
+    for (int r=0; r<d; r++)
+    {
+        for (int c=0; c<d; c++)
+        {
+            if (board[r][c] == 0 && (r == d-1 && c == d-1))
+            {
+                blank_at_end = true;
+            }
+            else if (board[r][c] != counter)
+            {
+                pieces_positioned = false;
+            }
+            counter ++;
+        }
+    }
+    return blank_at_end && pieces_positioned;
 }
