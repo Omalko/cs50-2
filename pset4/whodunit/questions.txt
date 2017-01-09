@@ -1,0 +1,55 @@
+1.  What’s stdint.h?
+
+Makes for more portable code by providing typedefs.
+
+2.  What’s the point of using uint8_t, uint32_t, int32_t, and uint16_t in a program?
+
+Allows you to work with data explicitly at the bit level on your program.
+
+2.  How many bytes is a BYTE, a DWORD, a LONG, and a WORD, respectively?
+
+BYTE = 8 bits
+DWORD = 32 bits
+LONG = 32 bits
+WORD = 16 bits
+
+3.  What (in ASCII, decimal, or hexadecimal) must the first two bytes of any BMP file be? Leading bytes used to identify file formats (with high probability) are generally called "magic numbers."
+
+In hexadecimal it is Ox424df6.
+
+4.  What’s the difference between bfSize and biSize?
+
+bfSize is the size of the whole bmp file, which includes the headerfiles, 
+while biSize is the size of the BITMAPINFOHEADER header file. 
+biSize is constant and it equals 14 bytes
+
+5.  What does it mean if biHeight is negative?
+
+If biHeight is negative, the bitmap is a top-down DIB and its origin is the upper-left corner.
+
+6.  What field in BITMAPINFOHEADER specifies the BMP’s color depth (i.e., bits per pixel)?
+
+biBitCount
+
+7.  Why might fopen return NULL in lines 24 and 32 of copy.c?
+
+File doesn't exist or you don't have permission to write to it.
+
+8.  Why is the third argument to fread always 1 in our code?
+
+???
+
+9.  What value does line 65 of copy.c assign to padding if bi.biWidth is 3?
+
+3
+
+10.  What does fseek do?
+
+Goes to a specified place in the file.
+
+11.  What is SEEK_CUR?
+
+This is an integer constant which, when used as the whence argument to the fseek or 
+fseeko function, specifies that the offset provided is relative to the current file 
+position.
+
