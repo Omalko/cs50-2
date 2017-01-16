@@ -15,7 +15,9 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Usage: ./copy scale infile outfile\n");
         return 1;
     }
-
+    // get scale and cast to float
+    int scale = atoi(argv[1]);
+    
     // remember filenames
     char *infile = argv[2];
     char *outfile = argv[3];
@@ -44,6 +46,18 @@ int main(int argc, char *argv[])
     // read infile's BITMAPINFOHEADER
     BITMAPINFOHEADER bi;
     fread(&bi, sizeof(BITMAPINFOHEADER), 1, inptr);
+    
+    bi.biHeight *= scale;
+    bi.biWidth *= scale;
+    
+    // determine padding for scanlines
+    int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+    
+    bi.biSizeImage = ((sizeof(RGBTRIPLE) * bi.biWidth) + padding)*abs(bi.biHeight);
+    
+    bf.bfSize = bi.biSizeImage +
+            sizeof(BITMAPFILEHEADER) +
+            sizeof(BITMAPINFOHEADER);
 
     // ensure infile is (likely) a 24-bit uncompressed BMP 4.0
     if (bf.bfType != 0x4d42 || bf.bfOffBits != 54 || bi.biSize != 40 || 
@@ -60,9 +74,6 @@ int main(int argc, char *argv[])
 
     // write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
-
-    // determine padding for scanlines
-    int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
