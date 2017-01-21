@@ -1,7 +1,10 @@
-0.  TODO
-1.  TODO
-2.  TODO
-3.  TODO
-4.  TODO
-5.  TODO
-6.  TODO
+0.  A pneumoconiosis caused by inhalation of very fine silicate or quartz dust.
+1.  getrusage() returns resource usage measures for who.
+2.  16
+3.  
+4.  The loop uses fgetc and several if statements.  fgetc gets the next character, thereby progressing the loop.
+EOF is the terminating condition.  The char star word holds the current letters for the current word,
+and there is an index counter to keep that moving as well.
+5.  I think each character needs to be examined to make sure that there are not rogue characters
+in the word.
+6.  
