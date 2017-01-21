@@ -33,9 +33,11 @@ int main(int argc, char *argv[])
     
     BYTE buffer[512];
     
-    do
+    // originally had a do while, but moved the read statment
+    // into the while condition, which returns 1 or 0.
+    // eof() apparently not good - even though it worked.
+    while (fread(buffer, 512, 1, inptr))
     {
-        fread(buffer, 512, 1, inptr);
         if (buffer[0] == 0xff &&
             buffer[1] == 0xd8 &&
             buffer[2] == 0xff &&
@@ -65,8 +67,6 @@ int main(int argc, char *argv[])
             fwrite(buffer, 512, 1, fw);
         }
     }
-    while (!feof(inptr));
-
     // close infile
     fclose(inptr);
 
