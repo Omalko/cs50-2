@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef uint8_t BYTE; 
+typedef uint8_t BYTE;
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     // remember filenames
     char *infile = argv[1];
 
+
     // open input file 
     FILE *inptr = fopen(infile, "r");
     if (inptr == NULL)
@@ -24,9 +25,13 @@ int main(int argc, char *argv[])
         return 2;
     }
     
-    BYTE buffer[512];
-    
     int jpegs = 0;
+    
+    // This line was taken from a GitHub repo, and helped with conditions
+    // inside the do while loop
+    FILE *fw = NULL;
+    
+    BYTE buffer[512];
     
     do
     {
@@ -36,22 +41,31 @@ int main(int argc, char *argv[])
             buffer[2] == 0xff &&
             (buffer[3] & 0xf0) == 0xe0)
         {
-            printf("Found a jpeg!\n");
+            // another helpful line from a GitHub repo.
+            // makes sense, if there was a JPEG transfer in progress, close it
+            if (fw !=NULL)
+            {
+                fclose(fw);
+            }
+            
+            // originally had this at 7, think that caused issues.
+            char fn[8];
+            sprintf(fn, "%03i.jpg", jpegs);
+
+            // If the file pointer is declared outside the block, you can just
+            // keep reassigning it.
+            fw = fopen(fn, "w");
             jpegs ++;
+        }
+        
+        // Found this on a GitHub repo, I like the simplicity of a single
+        // if statment to check if a JPEG transfer is in progress.
+        if (fw != NULL)
+        {
+            fwrite(buffer, 512, 1, fw);
         }
     }
     while (!feof(inptr));
-    printf("Total: %d\n", jpegs);
-    /*
-    // open output file
-    FILE *outptr = fopen(outfile, "w");
-    if (outptr == NULL)
-    {
-        fclose(inptr);
-        fprintf(stderr, "Could not create %s.\n", outfile);
-        return 3;
-    }
-    */
 
     // close infile
     fclose(inptr);
