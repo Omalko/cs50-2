@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+
+typedef uint8_t BYTE; 
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +23,25 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Could not open %s.\n", infile);
         return 2;
     }
+    
+    BYTE buffer[512];
+    
+    int jpegs = 0;
+    
+    do
+    {
+        fread(buffer, 512, 1, inptr);
+        if (buffer[0] == 0xff &&
+            buffer[1] == 0xd8 &&
+            buffer[2] == 0xff &&
+            (buffer[3] & 0xf0) == 0xe0)
+        {
+            printf("Found a jpeg!\n");
+            jpegs ++;
+        }
+    }
+    while (!feof(inptr));
+    printf("Total: %d\n", jpegs);
     /*
     // open output file
     FILE *outptr = fopen(outfile, "w");
@@ -30,14 +52,6 @@ int main(int argc, char *argv[])
         return 3;
     }
     */
-    /*
-    // read infile's BITMAPFILEHEADER
-    BITMAPFILEHEADER bf;
-    fread(&bf, sizeof(BITMAPFILEHEADER), 1, inptr);
-    */
-
-    // write outfile's BITMAPFILEHEADER
-    //fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
 
     // close infile
     fclose(inptr);
