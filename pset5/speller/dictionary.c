@@ -4,7 +4,12 @@
 
 #include <stdbool.h>
 
+#include <stdio.h>
+
 #include "dictionary.h"
+
+FILE *fp;
+char word[45];
 
 /**
  * Returns true if word is in dictionary else false.
@@ -20,13 +25,19 @@ bool check(const char *word)
  */
 bool load(const char *dictionary)
 {
-    // TODO
-    return false;
+    fp = fopen(dictionary, "r");
+    
+	while (fscanf(fp, "%s", word) != EOF)
+	{
+		printf("Dictionary word is: %s\n", word);
+	}
+	return true;
 }
 
 /**
  * Returns number of words in dictionary if loaded else 0 if not yet loaded.
  */
+ 
 unsigned int size(void)
 {
     // TODO
