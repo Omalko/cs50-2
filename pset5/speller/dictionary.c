@@ -6,18 +6,49 @@
 
 #include <stdio.h>
 
+#include <string.h>
+
+#include <strings.h>
+
+#include <stdlib.h>
+
 #include "dictionary.h"
 
-FILE *fp;
-char word[45];
+unsigned int dict_size = 0;
+
+bool loaded = false;
+
+char word[46];
+
+typedef struct node
+{
+    char val[46];
+    struct node* next;
+} node_t;
+
+node_t* head;
 
 /**
  * Returns true if word is in dictionary else false.
  */
 bool check(const char *word)
 {
-    // TODO
+    
+    node_t* crawler = head;
+    
+    while(crawler != NULL)
+    {
+        if(strcasecmp(crawler->val, word)==0)
+        {
+            return true;
+        }
+        
+        crawler = crawler->next;
+        
+    }
+    
     return false;
+    
 }
 
 /**
@@ -25,12 +56,37 @@ bool check(const char *word)
  */
 bool load(const char *dictionary)
 {
-    fp = fopen(dictionary, "r");
+    FILE* fp = fopen(dictionary, "r");
     
 	while (fscanf(fp, "%s", word) != EOF)
 	{
-		printf("Dictionary word is: %s\n", word);
+	    
+	    node_t* inode = malloc(sizeof(node_t));
+	    if(inode==NULL)
+	    {
+	        return false;
+	    }
+	    strcpy(inode->val, word);
+	    
+	    if(!head)
+	    {
+	        
+	        head = inode;
+	        head->next = NULL;
+	        
+	    }
+	    else
+	    {
+	        
+	        node_t* dhead = head;
+	        inode->next = dhead;
+	        head = inode;
+	    }
+	    
+	    dict_size ++;
+	    
 	}
+	loaded = true;
 	return true;
 }
 
@@ -40,8 +96,14 @@ bool load(const char *dictionary)
  
 unsigned int size(void)
 {
-    // TODO
-    return 0;
+    if(loaded)
+    {
+        return dict_size;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 /**
@@ -49,6 +111,12 @@ unsigned int size(void)
  */
 bool unload(void)
 {
-    // TODO
-    return false;
+    
+    while(head != NULL)
+    {
+        node_t* next_head = head->next;
+        free(head);
+        head = next_head;
+    }
+    return true;
 }
