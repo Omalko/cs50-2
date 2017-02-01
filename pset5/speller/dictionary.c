@@ -14,19 +14,14 @@
 
 #include "dictionary.h"
 
+#include "utils.h"
+
 unsigned int dict_size = 0;
 
 bool loaded = false;
 
 char word[46];
 
-typedef struct node
-{
-    char val[46];
-    struct node* next;
-} node_t;
-
-node_t* head;
 
 /**
  * Returns true if word is in dictionary else false.
@@ -34,20 +29,9 @@ node_t* head;
 bool check(const char *word)
 {
     
-    node_t* crawler = head;
+    int hv = get_hash_value(word);
     
-    while(crawler != NULL)
-    {
-        if(strcasecmp(crawler->val, word)==0)
-        {
-            return true;
-        }
-        
-        crawler = crawler->next;
-        
-    }
-    
-    return false;
+    return lookup(hv, word);
     
 }
 
@@ -61,27 +45,9 @@ bool load(const char *dictionary)
 	while (fscanf(fp, "%s", word) != EOF)
 	{
 	    
-	    node_t* inode = malloc(sizeof(node_t));
-	    if(inode==NULL)
-	    {
-	        return false;
-	    }
-	    strcpy(inode->val, word);
+	    int hv = get_hash_value(word);
 	    
-	    if(!head)
-	    {
-	        
-	        head = inode;
-	        head->next = NULL;
-	        
-	    }
-	    else
-	    {
-	        
-	        node_t* dhead = head;
-	        inode->next = dhead;
-	        head = inode;
-	    }
+	    insert_at_node(hv, word);
 	    
 	    dict_size ++;
 	    
@@ -111,12 +77,5 @@ unsigned int size(void)
  */
 bool unload(void)
 {
-    
-    while(head != NULL)
-    {
-        node_t* next_head = head->next;
-        free(head);
-        head = next_head;
-    }
-    return true;
+    return destroy();
 }
