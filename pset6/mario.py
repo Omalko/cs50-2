@@ -1,27 +1,28 @@
 from cs50 import get_int
 
-ready = False
-
-while(not ready):
+def main():
     
-    print("Height: ", end="")
+    ready = False
     
-    height = get_int()
-    
-    if (height >= 0 and height <= 23):
+    while(not ready):
         
-        ready = True
+        print("Height: ", end="")
         
-for i in range(height):
-    
-    blank_space = height - i - 1
-    
-    print(" " * blank_space, end="")
-    print("#" * ( i + 1 ), end="")
-    print("  ", end="")
-    print("#" * ( i + 1 ), end="")
-    print(" " * blank_space)
+        height = get_int()
+        
+        if (height >= 0 and height <= 23):
+            
+            ready = True
+            
+    for i in range(height):
+        
+        blank_space = height - i - 1
+        
+        print(" " * blank_space, end="")
+        print("#" * ( i + 1 ), end="")
+        print("  ", end="")
+        print("#" * ( i + 1 ), end="")
+        print(" " * blank_space)
 
-
-
-
+if __name__ == "__main__":
+    main()
