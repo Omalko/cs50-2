@@ -95,9 +95,17 @@ def logout():
 @app.route("/quote", methods=["GET", "POST"])
 @login_required
 def quote():
-    """Get stock quote."""
-    return apology("TODO")
-
+    
+    if request.method == "GET":
+        
+        return render_template("quote.html")
+        
+    else:
+        
+        result = lookup(request.form.get("symbol"))
+        
+        return render_template("quoted.html", result=result)
+        
 @app.route("/register", methods=["GET", "POST"])
 def register():
     
