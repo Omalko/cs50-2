@@ -49,6 +49,16 @@ def buy():
         if not request.form.get("symbol") or not request.form.get("number"):
             
             return apology("Must input symbol and number")
+            
+        result = lookup(request.form.get("symbol"))
+        
+        rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
+        
+        if float(rows[0]['cash']) < float(result['price'])*float(request.form.get("number")):
+            
+            return apology("Insufficient funds.")
+        
+        
 
 @app.route("/history")
 @login_required
