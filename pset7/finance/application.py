@@ -43,6 +43,12 @@ def buy():
     if request.method == "GET":
         
         return render_template("buy.html")
+        
+    else:
+        
+        if not request.form.get("symbol") or not request.form.get("number"):
+            
+            return apology("Must input symbol and number")
 
 @app.route("/history")
 @login_required
