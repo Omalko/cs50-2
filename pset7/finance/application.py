@@ -3,6 +3,7 @@ from flask import Flask, flash, redirect, render_template, request, session, url
 from flask_session import Session
 from passlib.apps import custom_app_context as pwd_context
 from tempfile import gettempdir
+from datetime import datetime
 
 from helpers import *
 
@@ -54,9 +55,24 @@ def buy():
         
         rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
         
-        if float(rows[0]['cash']) < float(result['price'])*float(request.form.get("number")):
+        total = float(result['price'])*float(request.form.get("number"))
+        
+        if float(rows[0]['cash']) < total:
             
             return apology("Insufficient funds.")
+            
+        db.execute("UPDATE users SET CASH = :cash WHERE id = :id", cash=float(rows[0]['cash']) - total, id=session.get("user_id"))
+        
+        db.execute("""INSERT INTO purchases (username, symbol, price, quantity, total, timestamp) 
+                      VALUES (:username, :symbol, :price, :quantity, :total, :timestamp)""",
+                    username=rows[0]['username'],
+                    symbol=request.form.get("symbol"),
+                    price=float(result['price']),
+                    quantity=int(request.form.get("number")),
+                    total = total,
+                    timestamp = str(datetime.now()))
+        
+        return redirect(url_for("index"))           
         
         
 
