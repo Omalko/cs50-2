@@ -66,6 +66,10 @@ def buy():
             
         result = lookup(request.form.get("symbol"))
         
+        if not result:
+            
+            return apology("Must input valid stock symbol")
+        
         rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
         
         total = float(result['price'])*float(request.form.get("number"))
@@ -151,6 +155,10 @@ def quote():
     else:
         
         result = lookup(request.form.get("symbol"))
+        
+        if not result:
+            
+            return apology("Not a valid stock symbol")
         
         return render_template("quoted.html", result=result)
         
