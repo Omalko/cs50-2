@@ -1,6 +1,11 @@
 import csv
 import urllib.request
 
+from cs50 import SQL
+
+# configure CS50 Library to use SQLite database
+db = SQL("sqlite:///finance.db")
+
 from flask import redirect, render_template, request, session, url_for
 from functools import wraps
 
@@ -68,3 +73,30 @@ def lookup(symbol):
 def usd(value):
     """Formats value as USD."""
     return "${:,.2f}".format(value)
+    
+def get_portfolio(user_id):
+    
+        portfolio = []
+        
+        rows = db.execute("SELECT * FROM users WHERE id = :id", id=user_id)
+    
+        stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM transactions 
+                           WHERE username=:username GROUP BY symbol""", username=rows[0]["username"])
+                           
+        for stock in stocks:
+            
+            if stock['total_shares'] != 0:
+                
+                result = lookup(stock['symbol'])
+                
+                portfolio.append(
+                    {
+                        'symbol' : stock['symbol'],
+                        'name' : result['name'],
+                        'shares' : stock['total_shares'],
+                        'price' : result['price'],
+                        'total' : int(stock['total_shares'])*float(result['price'])
+                    }
+                )
+                
+        return portfolio

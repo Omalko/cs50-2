@@ -37,30 +37,15 @@ def index():
     
     rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
     
-    stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM transactions 
-                           WHERE username=:username GROUP BY symbol""", username=rows[0]["username"])
+    portfolio = get_portfolio(session.get("user_id"))
     
     cash = rows[0]['cash']
     
     grand_total = float(cash)
     
-    portfolio = []
-    
-    for stock in stocks:
+    for stock in portfolio:
         
-        result = lookup(stock['symbol'])
-        
-        portfolio.append(
-            {
-                'symbol' : stock['symbol'],
-                'name' : result['name'],
-                'shares' : stock['total_shares'],
-                'price' : result['price'],
-                'total' : float(result['price'])*int(stock['total_shares'])
-            }
-        )
-        
-        grand_total += float(result['price'])*int(stock['total_shares'])
+        grand_total += float(stock['total'])
         
     return render_template('index.html', cash=cash, grand_total=grand_total, portfolio=portfolio)
 
@@ -211,10 +196,7 @@ def sell():
     
     if request.method == "GET":
         
-        rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
-    
-        stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM transactions 
-                           WHERE username=:username GROUP BY symbol""", username=rows[0]["username"])
+        stocks = get_portfolio(session.get("user_id"))
                            
         return render_template("sell.html", stocks=stocks)
         
