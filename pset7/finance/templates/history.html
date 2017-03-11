@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+For each row, make clear whether a stock was bought or sold and include the stock’s symbol, the (purchase or sale) price, the number of shares bought or sold, and the date and time at which the transaction occurred.
+
+{% block main %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Transaction</td>
+                <td>Symbol</td>
+                <td>Shares</td>
+                <td>Timestamp</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in history %}
+                <tr>
+                    {% if transaction['quantity'] > 0 %}
+                        <td>Purchase</td>
+                    {% else %}
+                        <td>Sale</td>
+                    {% endif %}
+                    <td>{{ transaction['symbol'] }}</td>
+                    <td>{{ transaction['quantity']}}</td>
+                    <td>{{ transaction['timestamp'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

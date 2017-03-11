@@ -22,6 +22,7 @@ if app.config["DEBUG"]:
 # custom filter
 app.jinja_env.filters["usd"] = usd
 
+
 # configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = gettempdir()
 app.config["SESSION_PERMANENT"] = False
@@ -97,7 +98,14 @@ def buy():
 @login_required
 def history():
     """Show history of transactions."""
-    return apology("TODO")
+    
+    rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
+        
+    history = db.execute("SELECT * FROM transactions WHERE username=:username", username=rows[0]["username"])
+    
+    print(history)
+    
+    return render_template("history.html", history=history)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -236,6 +244,4 @@ def sell():
                     total = total,
                     timestamp = str(datetime.now()))
         
-        return redirect(url_for("index")) 
-        
-        
+        return redirect(url_for("index"))
