@@ -103,8 +103,6 @@ def history():
         
     history = db.execute("SELECT * FROM transactions WHERE username=:username", username=rows[0]["username"])
     
-    print(history)
-    
     return render_template("history.html", history=history)
 
 @app.route("/login", methods=["GET", "POST"])
