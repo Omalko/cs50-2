@@ -65,6 +65,10 @@ def buy():
             
             return apology("Must input symbol and number")
             
+        if float(request.form.get("number")) <= 0:
+            
+            return apology("Must input a number greater than 0")
+            
         result = lookup(request.form.get("symbol"))
         
         if not result:
@@ -243,3 +247,25 @@ def sell():
                     timestamp = str(datetime.now()))
         
         return redirect(url_for("index"))
+        
+@app.route("/cash", methods=["GET", "POST"])
+@login_required
+def cash():
+    """Add additional cash."""
+    
+    if request.method == "GET":
+        
+        return render_template("cash.html")
+        
+    else:
+        
+        if float(request.form.get("cash")) <= 0:
+            
+            return apology("Must input a number greater than zero")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
+        
+        db.execute("UPDATE users SET CASH = :cash WHERE id = :id", cash=float(rows[0]['cash']) + float(request.form.get("cash")), id=session.get("user_id"))
+        
+        return redirect(url_for("index"))
+        
