@@ -37,7 +37,7 @@ def index():
     
     rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
     
-    stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM purchases 
+    stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM transactions 
                            WHERE username=:username GROUP BY symbol""", username=rows[0]["username"])
     
     cash = rows[0]['cash']
@@ -91,7 +91,7 @@ def buy():
             
         db.execute("UPDATE users SET CASH = :cash WHERE id = :id", cash=float(rows[0]['cash']) - total, id=session.get("user_id"))
         
-        db.execute("""INSERT INTO purchases (username, symbol, price, quantity, total, timestamp) 
+        db.execute("""INSERT INTO transactions (username, symbol, price, quantity, total, timestamp) 
                       VALUES (:username, :symbol, :price, :quantity, :total, :timestamp)""",
                     username=rows[0]['username'],
                     symbol=request.form.get("symbol"),
@@ -137,7 +137,6 @@ def login():
 
         # remember which user has logged in
         session["user_id"] = rows[0]["id"]
-        session["username"] = rows[0]["username"]
 
         # redirect user to home page
         return redirect(url_for("index"))
@@ -209,4 +208,44 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock."""
-    return apology("TODO")
+    
+    if request.method == "GET":
+        
+        rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
+    
+        stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM transactions 
+                           WHERE username=:username GROUP BY symbol""", username=rows[0]["username"])
+                           
+        return render_template("sell.html", stocks=stocks)
+        
+    else:
+        
+        result = lookup(request.form.get("symbol"))
+        
+        rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
+        
+        stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM transactions 
+                           WHERE username=:username GROUP BY symbol""", username=rows[0]["username"])
+                           
+        for stock in stocks:
+            
+            if stock['symbol'] == request.form.get("symbol"):
+                
+                stock_to_sell = stock
+        
+        total = float(result['price'])*float(stock_to_sell['total_shares'])
+            
+        db.execute("UPDATE users SET CASH = :cash WHERE id = :id", cash=float(rows[0]['cash']) + total, id=session.get("user_id"))
+        
+        db.execute("""INSERT INTO transactions (username, symbol, price, quantity, total, timestamp) 
+                      VALUES (:username, :symbol, :price, :quantity, :total, :timestamp)""",
+                    username=rows[0]['username'],
+                    symbol=request.form.get("symbol"),
+                    price=float(result['price']),
+                    quantity=int(stock_to_sell['total_shares'])*-1,
+                    total = total,
+                    timestamp = str(datetime.now()))
+        
+        return redirect(url_for("index")) 
+        
+        

@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sell
+{% endblock %}
+
+{% block main %}
+    <form action="{{ url_for('sell') }}" method="post">
+        <fieldset>
+            <div class="form-group">
+              <label for="sell">Stock to Liquidate:</label>
+              <select class="form-control" name="symbol">
+                {% for stock in stocks %}
+                    <option>{{ stock['symbol'] }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" type="submit">Sell</button>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}
