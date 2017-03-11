@@ -40,7 +40,29 @@ def index():
     stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM purchases 
                            WHERE username=:username GROUP BY symbol""", username=rows[0]["username"])
     
-    print(stocks)
+    cash = rows[0]['cash']
+    
+    grand_total = float(cash)
+    
+    portfolio = []
+    
+    for stock in stocks:
+        
+        result = lookup(stock['symbol'])
+        
+        portfolio.append(
+            {
+                'symbol' : stock['symbol'],
+                'name' : result['name'],
+                'shares' : stock['total_shares'],
+                'price' : result['price'],
+                'total' : float(result['price'])*int(stock['total_shares'])
+            }
+        )
+        
+        grand_total += float(result['price'])*int(stock['total_shares'])
+        
+    return render_template('index.html', cash=cash, grand_total=grand_total, portfolio=portfolio)
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
