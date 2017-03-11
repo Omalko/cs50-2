@@ -34,7 +34,13 @@ db = SQL("sqlite:///finance.db")
 @app.route("/")
 @login_required
 def index():
-    return apology("TODO")
+    
+    rows = db.execute("SELECT * FROM users WHERE id = :id", id=session.get("user_id"))
+    
+    stocks = db.execute("""SELECT symbol, SUM(quantity) as total_shares FROM purchases 
+                           WHERE username=:username GROUP BY symbol""", username=rows[0]["username"])
+    
+    print(stocks)
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
@@ -109,6 +115,7 @@ def login():
 
         # remember which user has logged in
         session["user_id"] = rows[0]["id"]
+        session["username"] = rows[0]["username"]
 
         # redirect user to home page
         return redirect(url_for("index"))
