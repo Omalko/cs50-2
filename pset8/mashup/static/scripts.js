@@ -97,6 +97,7 @@ function addMarker(place)
             infowindow.open(map, marker);
         });
         
+        markers.push(marker);
     });
 }
 
@@ -174,7 +175,7 @@ function configure()
  */
 function removeMarkers()
 {
-    // TODO
+    markers = [];
 }
 
 /**
