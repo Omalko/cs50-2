@@ -42,10 +42,60 @@ def articles():
 @app.route("/search")
 def search():
     """Search for places that match query."""
-
-    # TODO
-    return jsonify([])
-
+    
+    q = request.args.get("q")
+    
+    if (re.match(r'[0-9]+', q)):
+        
+        stem = "%" + q + "%"
+        
+        rows = db.execute("""SELECT * FROM places WHERE postal_code LIKE :stem""", stem=stem)
+        
+        return jsonify(rows)
+        
+    delim = q.split(",")
+    
+    # comma separated
+    if len(delim) > 1:
+        
+        # takes care of any city, state combo
+        if len(delim) == 2 or len(delim) == 3:
+            
+            
+            if (re.match(r'[A-Z][A-Z]', delim[1].strip())):
+                
+                rows = db.execute("""SELECT * FROM places WHERE place_name LIKE :city AND
+                                                                admin_code1=:state""", city="%" + delim[0] + "%", state=delim[1].strip())
+                                                                
+                return jsonify(rows)
+                
+            else:
+                
+                rows = db.execute("""SELECT * FROM places WHERE place_name LIKE :city AND
+                                                                admin_name1=:state""", city="%" + delim[0] + "%", state=delim[1].strip())
+                                                                
+                return jsonify(rows)
+                
+    else:
+        
+        space_delim = q.split(" ")
+        
+        #probably a city and state
+        if len(space_delim) == 2 and re.match(r'[A-Z][A-Z]', space_delim[1].strip()):
+                
+                rows = db.execute("""SELECT * FROM places WHERE place_name LIKE :city AND
+                                                                admin_code1=:state""", city="%" + space_delim[0] + "%", state=space_delim[1].strip())
+                                                                
+                return jsonify(rows)
+        
+        # catch all for everything else
+        stem = "%" + q + "%"
+        
+        rows = db.execute("""SELECT * FROM places WHERE place_name LIKE :stem""", stem=stem)
+        
+        return jsonify(rows)
+                
+                
 @app.route("/update")
 def update():
     """Find up to 10 places within view."""
