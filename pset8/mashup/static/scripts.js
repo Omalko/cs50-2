@@ -64,23 +64,40 @@ $(function() {
 function addMarker(place)
 {
     
-    var infowindow = new google.maps.InfoWindow({
-        content: "<h1>Hello World</h1>"
+    var url = "/articles?geo=" + place.postal_code;
+    
+    $.getJSON(url, function(data) {
+        
+        var html = "<ul>";
+        
+        data.forEach(function(row) {
+            html += "<li>";
+            html += "<a href='" + row.link + "'>";
+            html += row.title;
+            html += "</a>";
+            html += "</li>";
+        })
+        
+        html += "</ul>";
+        
+        var infowindow = new google.maps.InfoWindow({
+            content: html
+        });
+    
+        var marker = new google.maps.Marker({
+            position: {
+                lat : place.latitude,
+                lng : place.longitude
+            },
+            map: map
+        });
+    
+        marker.addListener('click', function() {
+        
+            infowindow.open(map, marker);
+        });
+        
     });
-    
-    var marker = new google.maps.Marker({
-        position: {
-            lat : place.latitude,
-            lng : place.longitude
-        },
-        map: map
-    });
-    
-    marker.addListener('click', function() {
-        infowindow.open(map, marker);
-    });
-    
-    
 }
 
 /**
