@@ -63,7 +63,24 @@ $(function() {
  */
 function addMarker(place)
 {
-    // TODO
+    
+    var infowindow = new google.maps.InfoWindow({
+        content: "<h1>Hello World</h1>"
+    });
+    
+    var marker = new google.maps.Marker({
+        position: {
+            lat : place.latitude,
+            lng : place.longitude
+        },
+        map: map
+    });
+    
+    marker.addListener('click', function() {
+        infowindow.open(map, marker);
+    });
+    
+    
 }
 
 /**
