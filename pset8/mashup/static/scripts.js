@@ -37,7 +37,7 @@ $(function() {
     // options for map
     // https://developers.google.com/maps/documentation/javascript/reference#MapOptions
     var options = {
-        center: {lat: 37.4236, lng: -122.1619}, // Stanford, California
+        center: {lat: 32.5897, lng: -96.8571}, // Desoto TX
         disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         maxZoom: 14,
